@@ -487,11 +487,20 @@ export default {
     },
   },
   async mounted() {
-    await this.$store.dispatch("getOrderNumber");
-    await this.$store.dispatch("getConsts");
-    this.zenk = this.$store.getters.zenkPrice[0].value;
-    this.printP = this.$store.getters.printP[0].value;
-    this.packsGroupNumber = this.$store.getters.packsGroupNumber[0].value;
+    try {
+      await Promise.all([
+        this.$store.dispatch("getOrderNumber"),
+        this.$store.dispatch("getConsts"),
+      ]);
+
+      this.zenk = this.$store.getters.zenkPrice[0].value;
+      this.printP = this.$store.getters.printP[0].value;
+      this.finishPrice = this.$store.getters.bookFinishPrice[0].value;
+      this.packsGroupNumber = this.$store.getters.packsGroupNumber[0].value;
+    } catch (error) {
+      console.error("Error loading initial data:", error);
+      // Optionally set default values or notify the user
+    }
   },
 };
 </script>
